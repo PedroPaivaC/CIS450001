@@ -47,6 +47,8 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->queuetype = 0;
+  p->quantumsize = 4;
   release(&ptable.lock);
 
   // Allocate kernel stack.
@@ -283,6 +285,8 @@ scheduler(void)
       proc = p;
       switchuvm(p);
       p->state = RUNNING;
+      cprintf("Process %s is of Process ID %d, Queue Type %d, and Quantum Size %d", 
+        p->name, p->pid, p->queuetype, p->quantumsize);
       swtch(&cpu->scheduler, proc->context);
       switchkvm();
 
